@@ -33,6 +33,10 @@ class UsersRepository extends BaseRepository {
       throw new CustomError(err, 500);
     }
   }
+
+  async findBy(property, value) {
+    return await super.findBy(property, value);
+  }
 }
 
 const usersRepository = new UsersRepository();
