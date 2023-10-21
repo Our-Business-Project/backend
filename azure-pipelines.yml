@@ -51,7 +51,7 @@ stages:
       inputs:
         sourceFolder: "$(Agent.TempDirectory)"
         contents: "prod.env"
-        targetFolder: "$(Agent.BuildDirectory)"
+        targetFolder: "$(System.DefaultWorkingDirectory)"
       displayName: "Import prod.env"
 
     - task: ArchiveFiles@2
