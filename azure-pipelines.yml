@@ -42,8 +42,11 @@ stages:
       displayName: 'npm install, build and test'
 
     - task: DownloadSecureFile@1
+      name: "dotenvStaging"
       inputs:
-        secureFile: ‘prod.env’
+        secureFile: 'prod.env'
+      displayName: "Download prod.env"
+
     - task: CopyFiles@2
       inputs:
         sourceFolder: "$(Agent.TempDirectory)"
