@@ -46,9 +46,10 @@ stages:
         secureFile: ‘prod.env’
     - task: CopyFiles@2
       inputs:
-        SourceFolder: $(Agent.TempDirectory)
-        Contents: ‘**\prod.env’
-        TargetFolder: $(Build.SourcesDirectory)
+        sourceFolder: "$(Agent.TempDirectory)"
+        contents: "prod.env"
+        targetFolder: "$(Agent.BuildDirectory)"
+      displayName: "Import prod.env"
 
     - task: ArchiveFiles@2
       displayName: 'Archive files'
