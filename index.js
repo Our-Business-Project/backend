@@ -2,7 +2,7 @@ import express from "express";
 import http from "http";
 import dotenv from "dotenv";
 
-import { initRoutes } from "./src/routes/routes";
+import { initRoutes } from "./src/routes";
 import { checkAppBeforeStart, gracefulShutdown } from "./appHelopers";
 
 dotenv.config();
