@@ -19,7 +19,7 @@ const server = https.createServer(httpsOptions, app);
 
 checkAppBeforeStart();
 
-const port = process.env.PORT | 8443;
+const port = process.env.PORT || 8443;
 
 initRoutes(app);
 
