@@ -19,8 +19,6 @@ app.use(express.json());
 
 initRoutes(app);
 
-console.log(process.env.LISTEN_PORT);
-
 server.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });

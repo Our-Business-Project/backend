@@ -1,10 +1,13 @@
-import client from "./database/connection.js";
+import dotenv from "dotenv";
+import client, { dbName } from "./database/connection.js";
+
+dotenv.config();
 
 const checkAppBeforeStart = () => {
   async function run() {
     try {
       await client.connect();
-      await client.db("admin").command({ ping: 1 });
+      await client.db(dbName).command({ ping: 1 });
       console.log("You successfully connected to MongoDB!");
     } finally {
       await client.close();

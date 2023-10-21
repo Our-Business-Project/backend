@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const dbName = process.env.DATABASE_NAME;
 const uri =
   "mongodb+srv://" +
   process.env.DATABASE_LOGIN +
@@ -21,3 +22,4 @@ const client = new MongoClient(uri, {
 });
 
 export default client;
+export { dbName };
