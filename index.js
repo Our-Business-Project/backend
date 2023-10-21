@@ -9,6 +9,7 @@ import { checkAppBeforeStart, gracefulShutdown } from "./src/appHelpers.js";
 dotenv.config();
 
 const app = express();
+app.use(express.json());
 
 const httpsOptions = {
   key: fs.readFileSync("./certs/server.key"),
@@ -19,8 +20,6 @@ const server = https.createServer(httpsOptions, app);
 checkAppBeforeStart();
 
 const port = Number(process.env.LISTEN_PORT);
-
-app.use(express.json());
 
 initRoutes(app);
 

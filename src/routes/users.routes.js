@@ -2,17 +2,9 @@ import { Router } from "express";
 import { createUserValidation } from "../middlewares/users.validation.middleware.js";
 import { usersService } from "../services/users.service.js";
 import { responseJsonMiddleware } from "../middlewares/response.json.middleware.js";
+import { errorJsonMiddleware } from "../middlewares/error.json.middleware.js";
 
 const router = Router();
-
-router.get(
-  "/",
-  async (req, res, next) => {
-    console.log("Hello");
-    next();
-  },
-  responseJsonMiddleware
-);
 
 router.post(
   "/",
@@ -26,7 +18,8 @@ router.post(
       next(error);
     }
   },
-  responseJsonMiddleware
+  responseJsonMiddleware,
+  errorJsonMiddleware
 );
 
 export default router;

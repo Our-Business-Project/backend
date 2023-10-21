@@ -7,6 +7,20 @@ class UsersRepository extends BaseRepository {
     super("users");
   }
 
+  async checkDataNotExists(data) {
+    const { email, phone } = data;
+    await this.client.connect();
+    const resEmail = await this.collection.findOne({ email });
+    if (resEmail)
+      throw new CustomError("User with this email already exists!", 409);
+
+    const resPhone = await this.collection.findOne({ phone });
+    if (resPhone)
+      throw new CustomError("User with this phone already exists!", 409);
+
+    await this.client.close();
+  }
+
   async create(data) {
     try {
       const id = await super.create(data);
