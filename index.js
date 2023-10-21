@@ -1,5 +1,6 @@
 import express from "express";
-import http from "http";
+import https from "https";
+import fs from "fs";
 import dotenv from "dotenv";
 
 import { initRoutes } from "./src/routes/index.js";
@@ -9,7 +10,11 @@ dotenv.config();
 
 const app = express();
 
-const server = http.createServer(app);
+const httpsOptions = {
+  key: fs.readFileSync("./certs/server.key"),
+  cert: fs.readFileSync("./certs/server.crt"),
+};
+const server = https.createServer(httpsOptions, app);
 
 checkAppBeforeStart();
 
@@ -20,7 +25,7 @@ app.use(express.json());
 initRoutes(app);
 
 server.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
+  console.log(`App listening at https://localhost:${port}`);
 });
 
 process.on("SIGTERM", () => gracefulShutdown(server));

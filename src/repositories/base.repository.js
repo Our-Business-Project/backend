@@ -1,4 +1,4 @@
-import client, { dbName } from "../database/connection";
+import client, { dbName } from "../database/connection.js";
 
 class BaseRepository {
   constructor(collectionName) {
@@ -8,15 +8,19 @@ class BaseRepository {
 
   async create(data) {
     await this.client.connect();
-    await this.collection.createIndex(data);
+    const result = await this.collection.insertOne(data);
     await this.client.close();
+
+    return result.insertedId;
   }
 
   async update(_id, data) {
     await this.client.connect();
-    const row = await this.collection.findOne({ _id });
+    const result = await this.collection.findOne({ _id });
     await this.collection.updateOne({ _id }, data);
     await this.client.close();
+
+    return result.updatedId;
   }
 
   async getAll() {
@@ -29,10 +33,10 @@ class BaseRepository {
 
   async getById(_id) {
     await this.client.connect();
-    const row = await this.collection.findOne({ _id });
+    const data = await this.collection.findOne({ _id });
     await this.client.close();
 
-    return row;
+    return data;
   }
 
   async count() {

@@ -5,3 +5,5 @@ const responseJsonMiddleware = (_req, res, next) => {
 
   next();
 };
+
+export { responseJsonMiddleware };
