@@ -47,11 +47,9 @@ class BaseRepository {
     return num;
   }
 
-  async findBy(property, value) {
-    const dict = {};
-    dict[property] = value;
+  async findOne(obj) {
     await this.client.connect();
-    const res = await this.collection.findOne(dict);
+    const res = await this.collection.findOne(obj);
     await this.client.close();
 
     return res;
