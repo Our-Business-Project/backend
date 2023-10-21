@@ -1,7 +1,7 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ path: "./prod.env" });
 
 const dbName = process.env.DATABASE_NAME;
 const uri =

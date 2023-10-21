@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 import { initRoutes } from "./src/routes/index.js";
 
-dotenv.config();
+dotenv.config({ path: "./prod.env" });
 
 const app = express();
 app.use(express.json());
