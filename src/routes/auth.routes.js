@@ -16,6 +16,7 @@ router.post(
     try {
       const data = await authService.register(req.body);
       res.locals.data = data;
+      res.locals.status = 201;
       next();
     } catch (error) {
       next(error);
