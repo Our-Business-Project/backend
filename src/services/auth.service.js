@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
 import CustomError from "../models/error.custom.js";
 import { usersRepository } from "../repositories/users.repository.js";
+import { encodePassword } from "../helpers/auth.helper.js";
 
 class AuthService {
   async register(data) {
-    const { email, phone } = data;
+    const { email, phone, password } = data;
 
     const resEmail = await usersRepository.findOne({ email });
     if (resEmail)
@@ -14,9 +15,13 @@ class AuthService {
     if (resPhone)
       throw new CustomError("User with this phone already exists!", 409);
 
+    data.password = encodePassword(password);
+
     const user = await usersRepository.create(data);
 
     if (!user) throw new CustomError("Registration failed", 400);
+
+    delete user.password;
 
     return {
       ...user,
@@ -27,9 +32,13 @@ class AuthService {
   async login(data) {
     const { email, password } = data;
 
-    const user = await usersRepository.findOne({ email, password });
+    const hash = encodePassword(password);
+
+    const user = await usersRepository.findOne({ email, password: hash });
 
     if (!user) throw new CustomError("Invalid email/password", 400);
+
+    delete user.password;
 
     return {
       ...user,
