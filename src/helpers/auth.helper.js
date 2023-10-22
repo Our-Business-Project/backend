@@ -1,5 +1,10 @@
+import md5 from "md5";
 import jwt from "jsonwebtoken";
 import CustomError from "../models/error.custom.js";
+
+const encodePassword = (password) => {
+  return md5(password);
+};
 
 const parseTokenPayload = (next, headers) => {
   const tokenHeader = headers["authorization"];
@@ -18,4 +23,4 @@ const parseTokenPayload = (next, headers) => {
   }
 };
 
-export { parseTokenPayload };
+export { encodePassword, parseTokenPayload };
