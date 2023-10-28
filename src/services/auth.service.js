@@ -24,7 +24,7 @@ class AuthService {
     delete user.password;
 
     return {
-      ...user,
+      user,
       accessToken: jwt.sign({ id: user._id }, process.env.JWT_SECRET),
     };
   }
@@ -41,7 +41,7 @@ class AuthService {
     delete user.password;
 
     return {
-      ...user,
+      user,
       accessToken: jwt.sign({ id: user._id }, process.env.JWT_SECRET),
     };
   }
