@@ -25,7 +25,7 @@ class BaseRepository {
 
   async getAll() {
     await this.client.connect();
-    const rows = await this.collection.find({ _id }).toArray();
+    const rows = await this.collection.find({}).toArray();
     await this.client.close();
 
     return rows;
