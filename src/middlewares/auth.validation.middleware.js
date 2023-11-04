@@ -17,7 +17,9 @@ const registerUserValidation = (req, _res, next) => {
 
 const loginUserValidation = (req, _res, next) => {
   const obj = {
-    email: Joi.string().email().required(),
+    emailOrPhone: Joi.alternatives()
+      .try(Joi.string().email(), Joi.string().pattern(phoneRegex))
+      .required(),
     password: Joi.string().pattern(passwordRegex).required(),
   };
   validateRequired(next, obj, req.body);
