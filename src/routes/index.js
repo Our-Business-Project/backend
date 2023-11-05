@@ -1,9 +1,11 @@
-import { default as authRoutes } from "./auth.routes.js";
-import { default as usersRoutes } from "./users.routes.js";
+import { default as authRouter } from "./auth.routes.js";
+import { default as mailRouter } from "./mail.routes.js";
+import { default as usersRouter } from "./users.routes.js";
 
 const initRoutes = (app) => {
-  app.use("/api/v1/auth", authRoutes);
-  app.use("/api/v1/users", usersRoutes);
+  app.use("/api/v1/auth", authRouter);
+  app.use("/api/v1/mail", mailRouter);
+  app.use("/api/v1/users", usersRouter);
 };
 
 export { initRoutes };

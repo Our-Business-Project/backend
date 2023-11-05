@@ -14,13 +14,21 @@ class BaseRepository {
     return result.insertedId;
   }
 
-  async update(_id, data) {
-    await this.client.connect();
-    const result = await this.collection.findOne({ _id });
-    await this.collection.updateOne({ _id }, data);
-    await this.client.close();
+  async patch(id, data) {
+    const updateObj = {};
 
-    return result.updatedId;
+    for (const [key, value] of Object.entries(data)) {
+      if (value !== undefined) {
+        updateObj[key] = value;
+      }
+    }
+
+    await this.client.connect();
+    const result = await this.collection.updateOne(
+      { _id: id },
+      { $set: updateObj }
+    );
+    await this.client.close();
   }
 
   async getAll() {

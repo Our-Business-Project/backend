@@ -8,8 +8,12 @@ const encodePassword = (password) => {
   return md5(password);
 };
 
-const generateToken = (_id) => {
-  return jwt.sign({ _id }, jwtSecret, { expiresIn: "24h" });
+const generateToken = (_id, expiresIn = "24h") => {
+  return jwt.sign({ _id }, jwtSecret, { expiresIn });
+};
+
+const verifyToken = (token) => {
+  return jwt.verify(token, jwtSecret);
 };
 
 const parseTokenPayload = (next, headers) => {
@@ -22,11 +26,11 @@ const parseTokenPayload = (next, headers) => {
 
   const token = tokenHeader.replace("Bearer ", "");
   try {
-    return jwt.verify(token, jwtSecret);
+    return verifyToken(token);
   } catch (error) {
     next(new CustomError("Not Authorized", 401));
     return null;
   }
 };
 
-export { encodePassword, generateToken, parseTokenPayload };
+export { encodePassword, generateToken, verifyToken, parseTokenPayload };
