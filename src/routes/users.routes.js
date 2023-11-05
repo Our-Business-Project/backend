@@ -11,11 +11,11 @@ router.get(
   async (req, res, next) => {
     try {
       const tokenPayload = parseTokenPayload(next, req.headers);
-      if (tokenPayload) {
-        const data = await usersService.getUserById(req.params.id);
-        res.locals.data = data;
-        res.locals.status = 200;
-      }
+
+      const data = await usersService.getUserById(tokenPayload, req.params.id);
+      res.locals.data = data;
+      res.locals.status = 200;
+
       next();
     } catch (error) {
       next(error);
