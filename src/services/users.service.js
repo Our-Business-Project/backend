@@ -18,6 +18,21 @@ class UsersService {
 
     return data;
   }
+
+  async patchUser(tokenPayload, data) {
+    if (!tokenPayload) {
+      throw new CustomError("Not Authorized", 401);
+    }
+
+    await usersRepository.patch(new ObjectId(tokenPayload._id), data);
+    const resData = await usersRepository.getById(
+      new ObjectId(tokenPayload._id)
+    );
+
+    delete resData.password;
+
+    return resData;
+  }
 }
 
 const usersService = new UsersService();

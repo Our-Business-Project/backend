@@ -15,6 +15,16 @@ class UsersRepository extends BaseRepository {
       throw new CustomError(err, 500);
     }
   }
+
+  async patch(id, data) {
+    try {
+      const resId = await super.patch(id, data);
+      const res = await super.getById(resId);
+      return res;
+    } catch (err) {
+      throw new CustomError(err, 500);
+    }
+  }
 }
 
 const usersRepository = new UsersRepository();
