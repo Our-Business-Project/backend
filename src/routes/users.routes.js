@@ -11,7 +11,6 @@ router.get(
   async (req, res, next) => {
     try {
       const tokenPayload = parseTokenPayload(next, req.headers);
-      console.log(tokenPayload);
       if (tokenPayload) {
         const data = await usersService.getUserById(req.params.id);
         res.locals.data = data;
