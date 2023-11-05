@@ -3,12 +3,11 @@ import { usersRepository } from "../repositories/users.repository.js";
 import CustomError from "../models/error.custom.js";
 
 class UsersService {
-  async getProfile(tokenPayload) {
-    const { _id } = tokenPayload;
-    const data = await usersRepository.getById(new ObjectId(_id));
+  async getUserById(id) {
+    const data = await usersRepository.getById(new ObjectId(id));
 
     if (!data) {
-      throw new CustomError("Not Authorized", 401);
+      throw new CustomError("User not found", 401);
     }
 
     delete data.password;

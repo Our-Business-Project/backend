@@ -7,12 +7,13 @@ import { parseTokenPayload } from "../helpers/auth.helper.js";
 const router = Router();
 
 router.get(
-  "/profile",
+  "/:id",
   async (req, res, next) => {
     try {
       const tokenPayload = parseTokenPayload(next, req.headers);
+      console.log(tokenPayload);
       if (tokenPayload) {
-        const data = await usersService.getProfile(tokenPayload);
+        const data = await usersService.getUserById(req.params.id);
         res.locals.data = data;
         res.locals.status = 200;
       }
