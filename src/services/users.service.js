@@ -1,12 +1,12 @@
 import { ObjectId } from "mongodb";
 import { usersRepository } from "../repositories/users.repository.js";
 import CustomError from "../models/error.custom.js";
+import { verifyToken } from "../helpers/auth.helper.js";
 
 class UsersService {
-  async getUserById(tokenPayload, id) {
-    if (!tokenPayload) {
-      throw new CustomError("Not Authorized", 401);
-    }
+  async getUserById(token, id) {
+    // Check is user authenticated
+    verifyToken(token);
 
     const data = await usersRepository.getById(new ObjectId(id));
 
@@ -19,10 +19,8 @@ class UsersService {
     return data;
   }
 
-  async patchUser(tokenPayload, data) {
-    if (!tokenPayload) {
-      throw new CustomError("Not Authorized", 401);
-    }
+  async patchUser(token, data) {
+    const tokenPayload = verifyToken(token);
 
     await usersRepository.patch(new ObjectId(tokenPayload._id), data);
     const resData = await usersRepository.getById(

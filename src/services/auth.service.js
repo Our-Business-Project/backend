@@ -1,6 +1,7 @@
 import CustomError from "../models/error.custom.js";
 import { usersRepository } from "../repositories/users.repository.js";
 import { encodePassword, generateToken } from "../helpers/auth.helper.js";
+import { mailService } from "../mail/service.js";
 
 class AuthService {
   async register(data) {
@@ -25,6 +26,10 @@ class AuthService {
     if (!user) throw new CustomError("Registration failed", 400);
 
     delete user.password;
+
+    const token = generateToken(user._id);
+
+    await mailService.sendVerificationMail(token);
 
     return {
       user,

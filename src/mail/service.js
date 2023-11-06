@@ -14,12 +14,14 @@ class MailService {
     this.resend = resend;
   }
 
-  async sendVerificationMail(tokenPayload) {
-    if (!tokenPayload) {
-      throw new CustomError("Not Authorized", 401);
-    }
+  async sendVerificationMail(token) {
+    const tokenPayload = verifyToken(token);
 
-    const user = await usersService.getUserById(tokenPayload, tokenPayload._id);
+    const user = await usersService.getUserById(token, tokenPayload._id);
+
+    if (user.isEmailVerified) {
+      throw new CustomError("Email already verified", 400);
+    }
 
     await this.resend.emails.send({
       from: "onboarding@resend.dev",
@@ -37,22 +39,24 @@ class MailService {
     return { message: "Message sent!" };
   }
 
-  async verifyEmail(tokenPayload, tPayload) {
-    if (!tPayload) {
-      throw new CustomError("Invalid verification token", 400);
+  async verifyEmail(token, mailToken) {
+    const tokenPayload = verifyToken(token);
+    const tPayload = verifyToken(
+      mailToken,
+      new CustomError("Invalid verification token", 400)
+    );
+
+    if (tPayload._id !== tokenPayload._id) {
+      throw new CustomError("Invalid account", 401);
     }
 
-    if (!tokenPayload || tPayload._id !== tokenPayload._id) {
-      throw new CustomError("Not Authorized", 401);
-    }
-
-    const user = await usersService.getUserById(tokenPayload, tPayload._id);
+    const user = await usersService.getUserById(token, tPayload._id);
 
     if (user.isEmailVerified) {
       throw new CustomError("Email already verified", 400);
     }
 
-    await usersService.patchUser(tokenPayload, { isEmailVerified: true });
+    await usersService.patchUser(token, { isEmailVerified: true });
 
     return { message: "Email successfully verified!" };
   }
