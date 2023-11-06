@@ -32,7 +32,7 @@ class MailService {
         siteUrl: process.env.FRONTEND_URL,
         verificationUrl:
           process.env.FRONTEND_URL +
-          "/" +
+          "/mail?verify=" +
           generateToken(tokenPayload._id, "15m"),
       }),
     });
