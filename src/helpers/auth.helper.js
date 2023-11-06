@@ -12,25 +12,22 @@ const generateToken = (_id, expiresIn = "24h") => {
   return jwt.sign({ _id }, jwtSecret, { expiresIn });
 };
 
-const verifyToken = (token) => {
-  return jwt.verify(token, jwtSecret);
+const verifyToken = (token, err = new CustomError("Not Authorized", 401)) => {
+  try {
+    return jwt.verify(token, jwtSecret);
+  } catch (error) {
+    throw err;
+  }
 };
 
-const parseTokenPayload = (next, headers) => {
+const parseToken = (headers) => {
   const tokenHeader = headers["authorization"];
 
   if (!tokenHeader) {
-    next(new CustomError("Not Authorized", 401));
-    return null;
+    throw new CustomError("Not Authorized", 401);
   }
 
-  const token = tokenHeader.replace("Bearer ", "");
-  try {
-    return verifyToken(token);
-  } catch (error) {
-    next(new CustomError("Not Authorized", 401));
-    return null;
-  }
+  return tokenHeader.replace("Bearer ", "");
 };
 
-export { encodePassword, generateToken, verifyToken, parseTokenPayload };
+export { encodePassword, generateToken, verifyToken, parseToken };
