@@ -18,9 +18,7 @@ class UsersRepository extends BaseRepository {
 
   async patch(id, data) {
     try {
-      const resId = await super.patch(id, data);
-      const res = await super.getById(resId);
-      return res;
+      await super.patch(id, data);
     } catch (err) {
       throw new CustomError(err, 500);
     }
