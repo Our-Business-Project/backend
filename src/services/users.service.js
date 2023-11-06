@@ -22,14 +22,20 @@ class UsersService {
   async patchUser(token, data) {
     const tokenPayload = verifyToken(token);
 
-    await usersRepository.patch(new ObjectId(tokenPayload._id), data);
-    const resData = await usersRepository.getById(
-      new ObjectId(tokenPayload._id)
+    const resData = await usersRepository.patch(
+      new ObjectId(tokenPayload._id),
+      data
     );
 
     delete resData.password;
 
     return resData;
+  }
+
+  async deleteUser(token) {
+    const tokenPayload = verifyToken(token);
+
+    await usersRepository.deleteById(new ObjectId(tokenPayload._id));
   }
 }
 

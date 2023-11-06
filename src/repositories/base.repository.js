@@ -62,6 +62,12 @@ class BaseRepository {
 
     return res;
   }
+
+  async deleteById(id) {
+    await this.client.connect();
+    const res = await this.collection.deleteOne({ _id: id });
+    await this.client.close();
+  }
 }
 
 export default BaseRepository;

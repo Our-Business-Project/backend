@@ -24,4 +24,23 @@ router.get(
   errorJsonMiddleware
 );
 
+router.delete(
+  "/",
+  async (req, res, next) => {
+    try {
+      const token = parseToken(req.headers);
+      await usersService.deleteUser(token);
+
+      res.locals.data = "ok";
+      res.locals.status = 200;
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  },
+  responseJsonMiddleware,
+  errorJsonMiddleware
+);
+
 export default router;
