@@ -7,9 +7,7 @@ class BaseRepository {
   }
 
   async create(data) {
-    await this.client.connect();
     const result = await this.collection.insertOne(data);
-    await this.client.close();
 
     return result.insertedId;
   }
@@ -23,50 +21,35 @@ class BaseRepository {
       }
     }
 
-    await this.client.connect();
-    const result = await this.collection.updateOne(
-      { _id: id },
-      { $set: updateObj }
-    );
-    await this.client.close();
+    await this.collection.updateOne({ _id: id }, { $set: updateObj });
   }
 
   async getAll() {
-    await this.client.connect();
     const rows = await this.collection.find({}).toArray();
-    await this.client.close();
 
     return rows;
   }
 
   async getById(_id) {
-    await this.client.connect();
     const data = await this.collection.findOne({ _id });
-    await this.client.close();
 
     return data;
   }
 
   async count() {
-    await this.client.connect();
     const num = await this.collection.countDocuments({});
-    await this.client.close();
 
     return num;
   }
 
   async findOne(obj) {
-    await this.client.connect();
     const res = await this.collection.findOne(obj);
-    await this.client.close();
 
     return res;
   }
 
   async deleteById(id) {
-    await this.client.connect();
     const res = await this.collection.deleteOne({ _id: id });
-    await this.client.close();
   }
 }
 
