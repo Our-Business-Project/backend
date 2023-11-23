@@ -1,4 +1,5 @@
 import client, { dbName } from "../database/connection.js";
+import CustomError from "../models/error.custom.js";
 
 class BaseRepository {
   constructor(collectionName) {
@@ -7,9 +8,11 @@ class BaseRepository {
   }
 
   async create(data) {
-    const result = await this.collection.insertOne(data);
-
-    return result.insertedId;
+    try {
+      return (await this.collection.insertOne(data)).insertedId;
+    } catch (err) {
+      throw new CustomError(err, 500);
+    }
   }
 
   async patch(id, data) {
@@ -21,35 +24,51 @@ class BaseRepository {
       }
     }
 
-    await this.collection.updateOne({ _id: id }, { $set: updateObj });
+    try {
+      await this.collection.updateOne({ _id: id }, { $set: updateObj });
+    } catch (err) {
+      throw new CustomError(err, 500);
+    }
   }
 
   async getAll() {
-    const rows = await this.collection.find({}).toArray();
-
-    return rows;
+    try {
+      return await this.collection.find({}).toArray();
+    } catch (err) {
+      throw new CustomError(err, 500);
+    }
   }
 
-  async getById(_id) {
-    const data = await this.collection.findOne({ _id });
-
-    return data;
+  async getById(id) {
+    try {
+      return await this.collection.findOne({ _id: id });
+    } catch (err) {
+      throw new CustomError(err, 500);
+    }
   }
 
   async count() {
-    const num = await this.collection.countDocuments({});
-
-    return num;
+    try {
+      return await this.collection.countDocuments({});
+    } catch (err) {
+      throw new CustomError(err, 500);
+    }
   }
 
   async findOne(obj) {
-    const res = await this.collection.findOne(obj);
-
-    return res;
+    try {
+      return await this.collection.findOne(obj);
+    } catch (err) {
+      throw new CustomError(err, 500);
+    }
   }
 
   async deleteById(id) {
-    const res = await this.collection.deleteOne({ _id: id });
+    try {
+      await this.collection.deleteOne({ _id: id });
+    } catch (err) {
+      throw new CustomError(err, 500);
+    }
   }
 }
 
