@@ -3,7 +3,7 @@ import BaseRepository from "./base.repository.js";
 
 class CalculationsRepository extends BaseRepository {
   constructor() {
-    super("calculations");
+    super("calcData");
   }
 
   async patch(id, data) {
