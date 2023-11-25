@@ -31,17 +31,9 @@ class BaseRepository {
     }
   }
 
-  async getAll() {
+  async updateOne(filter, update, options = {}) {
     try {
-      return await this.collection.find({}).toArray();
-    } catch (err) {
-      throw new CustomError(err, 500);
-    }
-  }
-
-  async getById(id) {
-    try {
-      return await this.collection.findOne({ _id: id });
+      await this.collection.updateOne(filter, update, options);
     } catch (err) {
       throw new CustomError(err, 500);
     }
@@ -61,6 +53,22 @@ class BaseRepository {
     } catch (err) {
       throw new CustomError(err, 500);
     }
+  }
+
+  async find(obj) {
+    try {
+      return await this.collection.find(obj).toArray();
+    } catch (err) {
+      throw new CustomError(err, 500);
+    }
+  }
+
+  async getAll() {
+    return await this.find({});
+  }
+
+  async getById(id) {
+    return await this.findOne({ _id: id });
   }
 
   async deleteById(id) {

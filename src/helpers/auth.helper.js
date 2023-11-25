@@ -1,11 +1,16 @@
 import md5 from "md5";
 import jwt from "jsonwebtoken";
 import CustomError from "../models/error.custom.js";
+import { ObjectId } from "mongodb";
 
 const jwtSecret = process.env.JWT_SECRET;
 
 const encodePassword = (password) => {
   return md5(password);
+};
+
+const generateId = () => {
+  return new ObjectId();
 };
 
 const generateToken = (_id, expiresIn = "24h") => {
@@ -30,4 +35,4 @@ const parseToken = (headers) => {
   return tokenHeader.replace("Bearer ", "");
 };
 
-export { encodePassword, generateToken, verifyToken, parseToken };
+export { encodePassword, generateId, generateToken, verifyToken, parseToken };

@@ -1,7 +1,12 @@
 import CustomError from "../models/error.custom.js";
 import { usersRepository } from "../repositories/users.repository.js";
-import { encodePassword, generateToken } from "../helpers/auth.helper.js";
+import {
+  encodePassword,
+  generateId,
+  generateToken,
+} from "../helpers/auth.helper.js";
 import { mailService } from "../mail/service.js";
+import { calcRepository } from "../repositories/calc.repository.js";
 
 class AuthService {
   async register(data) {
@@ -22,6 +27,10 @@ class AuthService {
     data.isEmailVerified = false;
 
     const user = await usersRepository.create(data);
+    await calcRepository.create({
+      _id: user._id,
+      folders: [{ _id: generateId(), name: null, data: [] }],
+    });
 
     if (!user) throw new CustomError("Registration failed", 400);
 
