@@ -7,12 +7,12 @@ const registerUserValidation = (req, _res, next) => {
     firstName: Joi.string()
       .min(2)
       .max(255)
-      .pattern(/^[a-zA-Zа-яА-Я]+$/)
+      .pattern(/^[a-zA-Zа-яА-Я\-]+$/)
       .required(),
     lastName: Joi.string()
       .min(2)
       .max(255)
-      .pattern(/^[a-zA-Zа-яА-Я]+$/)
+      .pattern(/^[a-zA-Zа-яА-Я\-]+$/)
       .required(),
     email: Joi.string().email().required(),
     phone: Joi.string().pattern(phoneRegex).required(),

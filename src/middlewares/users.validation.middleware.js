@@ -7,11 +7,11 @@ const updateUserValidation = (req, _res, next) => {
     firstName: Joi.string()
       .min(2)
       .max(255)
-      .pattern(/^[a-zA-Zа-яА-Я]+$/),
+      .pattern(/^[a-zA-Zа-яА-Я\-]+$/),
     lastName: Joi.string()
       .min(2)
       .max(255)
-      .pattern(/^[a-zA-Zа-яА-Я]+$/),
+      .pattern(/^[a-zA-Zа-яА-Я\-]+$/),
     email: Joi.string().email(),
     phone: Joi.string().pattern(/^\+?3?8?(0\d{9})$/),
     taxation: Joi.string().valid("NaturalPerson", "Yurosoba"),
