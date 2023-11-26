@@ -15,22 +15,6 @@ class BaseRepository {
     }
   }
 
-  async patch(id, data) {
-    const updateObj = {};
-
-    for (const [key, value] of Object.entries(data)) {
-      if (value !== undefined) {
-        updateObj[key] = value;
-      }
-    }
-
-    try {
-      await this.collection.updateOne({ _id: id }, { $set: updateObj });
-    } catch (err) {
-      throw new CustomError(err, 500);
-    }
-  }
-
   async updateOne(filter, update, options = {}) {
     try {
       await this.collection.updateOne(filter, update, options);

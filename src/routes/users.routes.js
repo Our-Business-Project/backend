@@ -3,6 +3,7 @@ import { responseJsonMiddleware } from "../middlewares/response.json.middleware.
 import { errorJsonMiddleware } from "../middlewares/error.json.middleware.js";
 import { usersService } from "../services/users.service.js";
 import { parseToken } from "../helpers/auth.helper.js";
+import { updateUserValidation } from "../middlewares/users.validation.middleware.js";
 
 const router = Router();
 
@@ -12,6 +13,25 @@ router.get(
     try {
       const token = parseToken(req.headers);
       const data = await usersService.getUserById(token, req.params.id);
+      res.locals.data = data;
+      res.locals.status = 200;
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  },
+  responseJsonMiddleware,
+  errorJsonMiddleware
+);
+
+router.patch(
+  "/",
+  updateUserValidation,
+  async (req, res, next) => {
+    try {
+      const token = parseToken(req.headers);
+      const data = await usersService.patchUser(token, req.body);
       res.locals.data = data;
       res.locals.status = 200;
 

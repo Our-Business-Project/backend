@@ -16,6 +16,8 @@ class UsersService {
       throw new CustomError("User not found", 400);
     }
 
+    data.id = data._id;
+    delete data._id;
     delete data.password;
 
     return data;
@@ -24,8 +26,17 @@ class UsersService {
   async patchUser(token, data) {
     const tokenPayload = verifyToken(token);
     const userId = toObjectId(tokenPayload._id);
+    const userData = await this.getUserById(token, tokenPayload._id);
 
-    await usersRepository.patch(userId, data);
+    const updatedData = { ...userData, ...data };
+
+    await usersRepository.updateOne({ _id: userId }, { $set: updatedData });
+
+    data.id = data._id;
+    delete data._id;
+    delete updatedData.password;
+
+    return updatedData;
   }
 
   async deleteUser(token) {

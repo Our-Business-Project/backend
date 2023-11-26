@@ -24,6 +24,7 @@ class AuthService {
 
     data.phone = phone;
     data.password = encodePassword(password);
+    data.taxation = "NaturalPerson";
     data.isEmailVerified = false;
 
     const user = await usersRepository.create(data);
