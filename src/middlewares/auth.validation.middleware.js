@@ -4,8 +4,16 @@ import { phoneRegex, passwordRegex } from "../constants/regex.js";
 
 const registerUserValidation = (req, _res, next) => {
   const obj = {
-    firstName: Joi.string().min(2).max(255).required(),
-    lastName: Joi.string().min(2).max(255).required(),
+    firstName: Joi.string()
+      .min(2)
+      .max(255)
+      .pattern(/^[a-zA-Zа-яА-Я]+$/)
+      .required(),
+    lastName: Joi.string()
+      .min(2)
+      .max(255)
+      .pattern(/^[a-zA-Zа-яА-Я]+$/)
+      .required(),
     email: Joi.string().email().required(),
     phone: Joi.string().pattern(phoneRegex).required(),
     password: Joi.string().pattern(passwordRegex).required(),
