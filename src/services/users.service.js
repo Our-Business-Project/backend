@@ -5,7 +5,7 @@ import { calcRepository } from "../repositories/calc.repository.js";
 import { toObjectId } from "../helpers/mongodb.helper.js";
 
 class UsersService {
-  async getUserById(token, id) {
+  async getFullUserData(token, id) {
     // Check is user authenticated
     verifyToken(token);
     const userId = toObjectId(id);
@@ -16,6 +16,12 @@ class UsersService {
       throw new CustomError("User not found", 400);
     }
 
+    return data;
+  }
+
+  async getUserById(token, id) {
+    const data = await this.getFullUserData(token, id);
+
     data.id = data._id;
     delete data._id;
     delete data.password;
@@ -25,8 +31,8 @@ class UsersService {
 
   async patchUser(token, data) {
     const tokenPayload = verifyToken(token);
-    const userId = toObjectId(tokenPayload._id);
-    const userData = await this.getUserById(token, tokenPayload._id);
+    const userId = toObjectId(tokenPayload.id);
+    const userData = await this.getFullUserData(token, tokenPayload.id);
 
     const updatedData = { ...userData, ...data };
 
@@ -41,7 +47,7 @@ class UsersService {
 
   async deleteUser(token) {
     const tokenPayload = verifyToken(token);
-    const userId = toObjectId(tokenPayload._id);
+    const userId = toObjectId(tokenPayload.id);
 
     await usersRepository.deleteById(userId);
     await calcRepository.deleteById(userId);

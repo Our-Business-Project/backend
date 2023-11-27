@@ -13,8 +13,8 @@ const generateId = () => {
   return new ObjectId();
 };
 
-const generateToken = (_id, expiresIn = "24h") => {
-  return jwt.sign({ _id }, jwtSecret, { expiresIn });
+const generateToken = (id, expiresIn = "24h") => {
+  return jwt.sign({ id }, jwtSecret, { expiresIn });
 };
 
 const verifyToken = (token, err = new CustomError("Not Authorized", 401)) => {

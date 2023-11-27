@@ -7,7 +7,7 @@ class CalcService {
   async getFolders(token) {
     const tokenPayload = verifyToken(token);
 
-    const userId = toObjectId(tokenPayload._id);
+    const userId = toObjectId(tokenPayload.id);
 
     const data = await calcRepository.findOne({ _id: userId });
 
@@ -25,7 +25,7 @@ class CalcService {
   async getFullFolderData(token, folderId) {
     const tokenPayload = verifyToken(token);
 
-    const userId = toObjectId(tokenPayload._id);
+    const userId = toObjectId(tokenPayload.id);
     const fId = toObjectId(folderId);
 
     const folder = await calcRepository.findFolder(userId, fId);
@@ -55,7 +55,7 @@ class CalcService {
 
   async createFolder(token, folderData) {
     const tokenPayload = verifyToken(token);
-    const userId = toObjectId(tokenPayload._id);
+    const userId = toObjectId(tokenPayload.id);
 
     const newFolder = { _id: generateId(), ...folderData, data: [] };
 
@@ -85,7 +85,7 @@ class CalcService {
 
   async updateFolderName(token, folderId, folderName) {
     const tokenPayload = verifyToken(token);
-    const userId = toObjectId(tokenPayload._id);
+    const userId = toObjectId(tokenPayload.id);
     const fId = toObjectId(folderId);
 
     const folder = await this.getFullFolderData(token, folderId);
@@ -114,7 +114,7 @@ class CalcService {
 
   async deleteFolder(token, folderId) {
     const tokenPayload = verifyToken(token);
-    const userId = toObjectId(tokenPayload._id);
+    const userId = toObjectId(tokenPayload.id);
     const fId = toObjectId(folderId);
 
     const folder = await this.getFullFolderData(token, folderId);
@@ -155,7 +155,7 @@ class CalcService {
   async createCalculation(token, folderId, data) {
     const tokenPayload = verifyToken(token);
 
-    const userId = toObjectId(tokenPayload._id);
+    const userId = toObjectId(tokenPayload.id);
     const fId = toObjectId(folderId);
 
     const userFolder = await this.getFullFolderData(token, folderId);
@@ -187,7 +187,7 @@ class CalcService {
     const { data: calcData, ...restData } = data;
     const tokenPayload = verifyToken(token);
 
-    const userId = toObjectId(tokenPayload._id);
+    const userId = toObjectId(tokenPayload.id);
     const fId = toObjectId(folderId);
     const cId = toObjectId(calcId);
 
@@ -222,7 +222,7 @@ class CalcService {
   async deleteCalculation(token, folderId, calcId) {
     const tokenPayload = verifyToken(token);
 
-    const userId = toObjectId(tokenPayload._id);
+    const userId = toObjectId(tokenPayload.id);
     const fId = toObjectId(folderId);
     const cId = toObjectId(calcId);
 

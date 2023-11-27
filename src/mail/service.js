@@ -17,7 +17,7 @@ class MailService {
   async sendVerificationMail(token) {
     const tokenPayload = verifyToken(token);
 
-    const user = await usersService.getUserById(token, tokenPayload._id);
+    const user = await usersService.getUserById(token, tokenPayload.id);
 
     if (user.isEmailVerified) {
       throw new CustomError("Email already verified", 400);
@@ -33,7 +33,7 @@ class MailService {
         verificationUrl:
           process.env.FRONTEND_URL +
           "/mail?verify=" +
-          generateToken(tokenPayload._id, "15m"),
+          generateToken(tokenPayload.id, "15m"),
       }),
     });
     return { message: "Message sent!" };
@@ -46,7 +46,7 @@ class MailService {
       new CustomError("Invalid verification token", 400)
     );
 
-    if (tPayload._id !== tokenPayload._id) {
+    if (tPayload._id !== tokenPayload.id) {
       throw new CustomError("Invalid account", 401);
     }
 

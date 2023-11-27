@@ -25,9 +25,11 @@ class AuthService {
     data.phone = phone;
     data.password = encodePassword(password);
     data.taxation = "NaturalPerson";
+    data.image = null;
     data.isEmailVerified = false;
 
     const user = await usersRepository.create(data);
+
     await calcRepository.create({
       _id: user._id,
       folders: [{ _id: generateId(), name: null, data: [] }],
@@ -35,15 +37,17 @@ class AuthService {
 
     if (!user) throw new CustomError("Registration failed", 400);
 
+    user.id = user._id;
+    delete user._id;
     delete user.password;
 
-    const token = generateToken(user._id);
+    const token = generateToken(user.id);
 
     await mailService.sendVerificationMail(token);
 
     return {
       user,
-      accessToken: generateToken(user._id),
+      accessToken: generateToken(user.id),
     };
   }
 
@@ -64,11 +68,13 @@ class AuthService {
       else throw new CustomError("Invalid phone/password", 400);
     }
 
+    user.id = user._id;
+    delete user._id;
     delete user.password;
 
     return {
       user,
-      accessToken: generateToken(user._id),
+      accessToken: generateToken(user.id),
     };
   }
 }
