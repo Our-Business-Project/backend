@@ -24,7 +24,7 @@ class AuthService {
 
     data.phone = phone;
     data.password = encodePassword(password);
-    data.taxation = "NaturalPerson";
+    data.taxation = "FOP";
     data.image = null;
     data.isEmailVerified = false;
 

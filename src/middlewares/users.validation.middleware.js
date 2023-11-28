@@ -14,7 +14,7 @@ const updateUserValidation = (req, _res, next) => {
       .pattern(/^[a-zA-Zа-яА-Я\-]+$/),
     email: Joi.string().email(),
     phone: Joi.string().pattern(/^\+?3?8?(0\d{9})$/),
-    taxation: Joi.string().valid("NaturalPerson", "Yurosoba"),
+    taxation: Joi.string().valid("FOP", "TOV"),
   };
   validateRequired(next, obj, req.body);
 
