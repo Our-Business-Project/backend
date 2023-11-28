@@ -3,6 +3,7 @@ import CustomError from "../models/error.custom.js";
 import { verifyToken } from "../helpers/auth.helper.js";
 import { calcRepository } from "../repositories/calc.repository.js";
 import { toObjectId } from "../helpers/mongodb.helper.js";
+import { deleteImage } from "../helpers/images.helper.js";
 
 class UsersService {
   async getFullUserData(token, id) {
@@ -48,6 +49,12 @@ class UsersService {
   async deleteUser(token) {
     const tokenPayload = verifyToken(token);
     const userId = toObjectId(tokenPayload.id);
+
+    const userData = await this.getFullUserData(token, tokenPayload.id);
+
+    if (userData.image?.fileId) {
+      await deleteImage(userData.image.fileId);
+    }
 
     await usersRepository.deleteById(userId);
     await calcRepository.deleteById(userId);

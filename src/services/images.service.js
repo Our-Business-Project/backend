@@ -15,7 +15,7 @@ class ImagesService {
       throw new CustomError("User not found", 400);
     }
 
-    if (userData.image.fileId) {
+    if (userData.image?.fileId) {
       await deleteImage(userData.image.fileId);
     }
 
