@@ -4,7 +4,6 @@ import { responseJsonMiddleware } from "../middlewares/response.json.middleware.
 import { errorJsonMiddleware } from "../middlewares/error.json.middleware.js";
 import { imagesService } from "../services/images.service.js";
 import { parseToken } from "../helpers/auth.helper.js";
-import { updateUserValidation } from "../middlewares/users.validation.middleware.js";
 
 const router = Router();
 const storage = multer.memoryStorage();
