@@ -32,7 +32,7 @@ const createCalcDataValidation = (req, _res, next) => {
 
   const obj = {
     name: Joi.string().required(),
-    data: {
+    data: Joi.object({
       ProductionPlan: innerObject,
       CostPrice: innerObject,
       PricePerUnit: innerObject,
@@ -43,7 +43,22 @@ const createCalcDataValidation = (req, _res, next) => {
       BreakEvenPoint: innerObject,
       Profit: innerObject,
       Want: innerObject,
-    },
+    }).required(),
+    fixedCosts: Joi.array()
+      .items(
+        Joi.object({
+          name: Joi.string().required(),
+          columnNames: Joi.array().items(Joi.string()).required(),
+          data: Joi.array()
+            .items(
+              Joi.array()
+                .items(Joi.alternatives().try(Joi.string(), Joi.number()))
+                .length(Joi.ref("...columnNames.length"))
+            )
+            .required(),
+        })
+      )
+      .required(),
   };
   validateRequired(next, obj, req.body);
 
@@ -63,7 +78,7 @@ const updateCalcDataValidation = (req, _res, next) => {
 
   const obj = {
     name: Joi.string().optional(),
-    data: {
+    data: Joi.object({
       ProductionPlan: innerObject,
       CostPrice: innerObject,
       PricePerUnit: innerObject,
@@ -74,7 +89,7 @@ const updateCalcDataValidation = (req, _res, next) => {
       BreakEvenPoint: innerObject,
       Profit: innerObject,
       Want: innerObject,
-    },
+    }).optional(),
   };
   validateRequired(next, obj, req.body);
 
