@@ -170,6 +170,15 @@ class CalcService {
         400
       );
 
+    data.fixedCosts.forEach((item) => {
+      item._id = generateId();
+
+      item.data = item.data.map((elem) => ({
+        _id: generateId(),
+        row: elem,
+      }));
+    });
+
     const newData = { _id: generateId(), ...data };
 
     await calcRepository.updateOne(
@@ -199,19 +208,19 @@ class CalcService {
       data: { ...userCalcData.data, ...calcData },
     };
 
-    await calcRepository.updateOne(
-      {
-        _id: userId,
-      },
-      {
-        $set: {
-          "folders.$[folder].data.$[calc]": updatedData,
-        },
-      },
-      {
-        arrayFilters: [{ "folder._id": fId }, { "calc._id": cId }],
-      }
-    );
+    // await calcRepository.updateOne(
+    //   {
+    //     _id: userId,
+    //   },
+    //   {
+    //     $set: {
+    //       "folders.$[folder].data.$[calc]": updatedData,
+    //     },
+    //   },
+    //   {
+    //     arrayFilters: [{ "folder._id": fId }, { "calc._id": cId }],
+    //   }
+    // );
 
     updatedData.id = updatedData._id;
     delete updatedData._id;

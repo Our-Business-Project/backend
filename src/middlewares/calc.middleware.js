@@ -90,6 +90,21 @@ const updateCalcDataValidation = (req, _res, next) => {
       Profit: innerObject,
       Want: innerObject,
     }).optional(),
+    fixedCosts: Joi.array()
+      .items(
+        Joi.object({
+          name: Joi.string().optional(),
+          columnNames: Joi.array().items(Joi.string()).optional(),
+          data: Joi.array()
+            .items(
+              Joi.array()
+                .items(Joi.alternatives().try(Joi.string(), Joi.number()))
+                .length(Joi.ref("...columnNames.length"))
+            )
+            .optional(),
+        })
+      )
+      .optional(),
   };
   validateRequired(next, obj, req.body);
 
