@@ -189,11 +189,20 @@ class CalcService {
     newData.id = newData._id;
     delete newData._id;
 
+    newData.fixedCosts.forEach((item) => {
+      item.id = item._id;
+      delete item._id;
+      item.data.forEach((elem) => {
+        elem.id = elem._id;
+        delete elem._id;
+      });
+    });
+
     return newData;
   }
 
   async patchCalculation(token, folderId, calcId, data) {
-    const { data: calcData, ...restData } = data;
+    const { data: calcData, fixedCosts, ...restData } = data;
     const tokenPayload = verifyToken(token);
 
     const userId = toObjectId(tokenPayload.id);
@@ -202,28 +211,54 @@ class CalcService {
 
     const userCalcData = await this.getFullCalculation(token, folderId, calcId);
 
+    userCalcData.fixedCosts.forEach((item) => {
+      const fItem = fixedCosts.find((fItem) =>
+        toObjectId(fItem.id).equals(item._id)
+      );
+      if (!fItem) return;
+      if (fItem.name) item.name = fItem.name;
+      if (fItem.columnNames) item.columnNames = fItem.columnNames;
+
+      item.data.forEach((dataItem) => {
+        const dItem = fItem.data.find((dItem) =>
+          toObjectId(dItem.id).equals(dataItem._id)
+        );
+        if (!dItem) return;
+        if (dItem.row) dataItem.row = dItem.row;
+      });
+    });
+
     const updatedData = {
       ...userCalcData,
       ...restData,
       data: { ...userCalcData.data, ...calcData },
     };
 
-    // await calcRepository.updateOne(
-    //   {
-    //     _id: userId,
-    //   },
-    //   {
-    //     $set: {
-    //       "folders.$[folder].data.$[calc]": updatedData,
-    //     },
-    //   },
-    //   {
-    //     arrayFilters: [{ "folder._id": fId }, { "calc._id": cId }],
-    //   }
-    // );
+    await calcRepository.updateOne(
+      {
+        _id: userId,
+      },
+      {
+        $set: {
+          "folders.$[folder].data.$[calc]": updatedData,
+        },
+      },
+      {
+        arrayFilters: [{ "folder._id": fId }, { "calc._id": cId }],
+      }
+    );
 
     updatedData.id = updatedData._id;
     delete updatedData._id;
+
+    updatedData.fixedCosts.forEach((item) => {
+      item.id = item._id;
+      delete item._id;
+      item.data.forEach((elem) => {
+        elem.id = elem._id;
+        delete elem._id;
+      });
+    });
 
     return updatedData;
   }

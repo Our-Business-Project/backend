@@ -93,13 +93,17 @@ const updateCalcDataValidation = (req, _res, next) => {
     fixedCosts: Joi.array()
       .items(
         Joi.object({
+          id: Joi.string().required(),
           name: Joi.string().optional(),
           columnNames: Joi.array().items(Joi.string()).optional(),
           data: Joi.array()
             .items(
-              Joi.array()
-                .items(Joi.alternatives().try(Joi.string(), Joi.number()))
-                .length(Joi.ref("...columnNames.length"))
+              Joi.object({
+                id: Joi.string().required(),
+                row: Joi.array()
+                  .items(Joi.alternatives().try(Joi.string(), Joi.number()))
+                  .required(),
+              }).required()
             )
             .optional(),
         })
