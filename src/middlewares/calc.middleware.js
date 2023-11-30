@@ -43,6 +43,9 @@ const createCalcDataValidation = (req, _res, next) => {
       BreakEvenPoint: innerObject,
       Profit: innerObject,
       Want: innerObject,
+      DesiredProductionPlan: innerObject,
+      DesiredCostPrice: innerObject,
+      DesiredPricePerUnit: innerObject,
     }).required(),
     fixedCosts: Joi.array()
       .items(
@@ -89,6 +92,9 @@ const updateCalcDataValidation = (req, _res, next) => {
       BreakEvenPoint: innerObject,
       Profit: innerObject,
       Want: innerObject,
+      DesiredProductionPlan: innerObject,
+      DesiredCostPrice: innerObject,
+      DesiredPricePerUnit: innerObject,
     }).optional(),
     fixedCosts: Joi.array()
       .items(
