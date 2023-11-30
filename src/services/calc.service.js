@@ -49,6 +49,7 @@ class CalcService {
       calc.id = calc._id;
       delete calc._id;
       delete calc.data;
+      delete calc.fixedCosts;
     });
     return folder;
   }
@@ -170,15 +171,6 @@ class CalcService {
         400
       );
 
-    data.fixedCosts.forEach((item) => {
-      item._id = generateId();
-
-      item.data = item.data.map((elem) => ({
-        _id: generateId(),
-        row: elem,
-      }));
-    });
-
     const newData = { _id: generateId(), ...data };
 
     await calcRepository.updateOne(
@@ -188,15 +180,6 @@ class CalcService {
 
     newData.id = newData._id;
     delete newData._id;
-
-    newData.fixedCosts.forEach((item) => {
-      item.id = item._id;
-      delete item._id;
-      item.data.forEach((elem) => {
-        elem.id = elem._id;
-        delete elem._id;
-      });
-    });
 
     return newData;
   }
@@ -211,27 +194,11 @@ class CalcService {
 
     const userCalcData = await this.getFullCalculation(token, folderId, calcId);
 
-    userCalcData.fixedCosts.forEach((item) => {
-      const fItem = fixedCosts.find((fItem) =>
-        toObjectId(fItem.id).equals(item._id)
-      );
-      if (!fItem) return;
-      if (fItem.name) item.name = fItem.name;
-      if (fItem.columnNames) item.columnNames = fItem.columnNames;
-
-      item.data.forEach((dataItem) => {
-        const dItem = fItem.data.find((dItem) =>
-          toObjectId(dItem.id).equals(dataItem._id)
-        );
-        if (!dItem) return;
-        if (dItem.row) dataItem.row = dItem.row;
-      });
-    });
-
     const updatedData = {
       ...userCalcData,
       ...restData,
       data: { ...userCalcData.data, ...calcData },
+      fixedCosts: fixedCosts ? fixedCosts : userCalcData.fixedCosts,
     };
 
     await calcRepository.updateOne(
