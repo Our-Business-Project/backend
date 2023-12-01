@@ -2,6 +2,7 @@ import { calcRepository } from "../repositories/calc.repository.js";
 import CustomError from "../models/error.custom.js";
 import { generateId, verifyToken } from "../helpers/auth.helper.js";
 import { toObjectId } from "../helpers/mongodb.helper.js";
+import { getCurrentTime } from "../helpers/datetime.helper.js";
 
 class CalcService {
   async getFolders(token) {
@@ -14,6 +15,7 @@ class CalcService {
     const folders = data ? data.folders : [];
 
     folders.forEach((folder) => {
+      folder.numberOfFiles = folder.data.length;
       folder.id = folder._id;
       delete folder._id;
       delete folder.data;
@@ -58,7 +60,9 @@ class CalcService {
     const tokenPayload = verifyToken(token);
     const userId = toObjectId(tokenPayload.id);
 
-    const newFolder = { _id: generateId(), ...folderData, data: [] };
+    const createdAt = getCurrentTime();
+
+    const newFolder = { _id: generateId(), ...folderData, data: [], createdAt };
 
     const userData = await calcRepository.findOne({ _id: userId });
 
@@ -89,6 +93,8 @@ class CalcService {
     const userId = toObjectId(tokenPayload.id);
     const fId = toObjectId(folderId);
 
+    const modifiedAt = getCurrentTime();
+
     const folder = await this.getFullFolderData(token, folderId);
 
     if (folder.name === null) {
@@ -104,12 +110,18 @@ class CalcService {
 
     await calcRepository.updateOne(
       { _id: userId, "folders._id": fId },
-      { $set: { "folders.$.name": folderName } }
+      {
+        $set: {
+          "folders.$.name": folderName,
+          "folders.$.modifiedAt": modifiedAt,
+        },
+      }
     );
 
     return {
       id: folder._id,
       name: folderName,
+      modifiedAt,
     };
   }
 
@@ -171,7 +183,9 @@ class CalcService {
         400
       );
 
-    const newData = { _id: generateId(), ...data };
+    const createdAt = getCurrentTime();
+
+    const newData = { _id: generateId(), ...data, createdAt };
 
     await calcRepository.updateOne(
       { _id: userId, "folders._id": fId },
@@ -194,11 +208,14 @@ class CalcService {
 
     const userCalcData = await this.getFullCalculation(token, folderId, calcId);
 
+    const modifiedAt = getCurrentTime();
+
     const updatedData = {
       ...userCalcData,
       ...restData,
       data: { ...userCalcData.data, ...calcData },
       fixedCosts: fixedCosts ? fixedCosts : userCalcData.fixedCosts,
+      modifiedAt,
     };
 
     await calcRepository.updateOne(
