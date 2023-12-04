@@ -30,6 +30,16 @@ const createCalcDataValidation = (req, _res, next) => {
     maxValue: Joi.number().optional(),
   }).required();
 
+  const desiredProductionPlanObject = Joi.object({
+    value: Joi.alternatives().try(Joi.number(), Joi.allow(null)).required(),
+    label: Joi.string().min(1).max(255).optional(),
+    borderRadius: Joi.string().min(1).max(255).optional(),
+    disabled: Joi.boolean().optional(),
+    slider: Joi.boolean().optional(),
+    minValue: Joi.number().optional(),
+    maxValue: Joi.number().optional(),
+  }).required();
+
   const obj = {
     name: Joi.string().required(),
     data: Joi.object({
@@ -43,7 +53,7 @@ const createCalcDataValidation = (req, _res, next) => {
       BreakEvenPoint: innerObject,
       Profit: innerObject,
       Want: innerObject,
-      DesiredProductionPlan: innerObject,
+      DesiredProductionPlan: desiredProductionPlanObject,
       DesiredCostPrice: innerObject,
       DesiredPricePerUnit: innerObject,
     }).required(),
@@ -80,6 +90,16 @@ const updateCalcDataValidation = (req, _res, next) => {
     maxValue: Joi.number().optional(),
   });
 
+  const desiredProductionPlanObject = Joi.object({
+    value: Joi.alternatives().try(Joi.number(), Joi.allow(null)).optional(),
+    label: Joi.string().min(1).max(255).optional(),
+    borderRadius: Joi.string().min(1).max(255).optional(),
+    disabled: Joi.boolean().optional(),
+    slider: Joi.boolean().optional(),
+    minValue: Joi.number().optional(),
+    maxValue: Joi.number().optional(),
+  });
+
   const obj = {
     name: Joi.string().optional(),
     data: Joi.object({
@@ -93,7 +113,7 @@ const updateCalcDataValidation = (req, _res, next) => {
       BreakEvenPoint: innerObject,
       Profit: innerObject,
       Want: innerObject,
-      DesiredProductionPlan: innerObject,
+      DesiredProductionPlan: desiredProductionPlanObject,
       DesiredCostPrice: innerObject,
       DesiredPricePerUnit: innerObject,
     }).optional(),
