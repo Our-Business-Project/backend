@@ -161,6 +161,7 @@ class CalcService {
     const calcData = await this.getFullCalculation(token, folderId, calcId);
     calcData.id = calcData._id;
     delete calcData._id;
+    calcData.parentFolderId = folderId;
 
     return calcData;
   }
