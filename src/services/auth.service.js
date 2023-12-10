@@ -14,7 +14,9 @@ class AuthService {
 
     const phone = phoneNumber.replace(/\D/g, "");
 
-    const resEmail = await usersRepository.findOne({ email });
+    const resEmail = await usersRepository.findOne({
+      email: email.toLowerCase(),
+    });
     if (resEmail)
       throw new CustomError("User with this email already exists!", 409);
 
@@ -22,6 +24,7 @@ class AuthService {
     if (resPhone)
       throw new CustomError("User with this phone already exists!", 409);
 
+    data.email = email.toLowerCase();
     data.phone = phone;
     data.password = encodePassword(password);
     data.taxation = "FOP";
@@ -57,13 +60,13 @@ class AuthService {
     const hash = encodePassword(password);
 
     const user = await usersRepository.findOne({
-      $or: [{ email: emailOrPhone }, { phone: emailOrPhone }],
+      $or: [{ email: emailOrPhone.toLowerCase() }, { phone: emailOrPhone }],
     });
 
     if (!user) throw new CustomError("No such user exists", 400);
 
     if (user.password !== hash) {
-      if (user.email == emailOrPhone)
+      if (user.email == emailOrPhone.toLowerCase())
         throw new CustomError("Invalid email/password", 400);
       else throw new CustomError("Invalid phone/password", 400);
     }
